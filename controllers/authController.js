@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../config/db');
 
-// สมัครสมาชิก
+// สมัครสมาชิกใหม่
 exports.register = async (req, res) => {
     console.log("register")
     const { username, password, location, telephone } = req.body;
