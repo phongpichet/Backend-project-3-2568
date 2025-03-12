@@ -1,8 +1,8 @@
 const db = require('./db');
 
-const createUser = async (username, password, location, telephone, groupUser) => {
-    const sql = 'INSERT INTO User (User_name, Password_name, Location_ID, Telephone, Group_User) VALUES (?, ?, ?, ?, ?)';
-    const [result] = await db.execute(sql, [username, password, location, telephone, groupUser]);
+const createUser = async (username, password, address, telephone, groupUser) => {
+    const sql = 'INSERT INTO User (User_name, Password_name, Address, Telephone, Group_User) VALUES (?, ?, ?, ?, ?)';
+    const [result] = await db.execute(sql, [username, password, address, telephone, groupUser]);
     return result;
 };
 
@@ -18,9 +18,9 @@ const getUserById = async (userId) => {
     return rows[0]; // คืนค่าเฉพาะ user ที่พบ
 };
 
-const updateUser = async (userId, username, location, telephone) => {
-    const sql = 'UPDATE User SET User_name = ?, Location_ID = ?, Telephone = ? WHERE User_ID = ?';
-    const [result] = await db.execute(sql, [username, location, telephone, userId]);
+const updateUser = async (userId, username, address, telephone) => {
+    const sql = 'UPDATE User SET User_name = ?, Address = ?, Telephone = ? WHERE User_ID = ?';
+    const [result] = await db.execute(sql, [username, address, telephone, userId]);
     return result;
 };
 
