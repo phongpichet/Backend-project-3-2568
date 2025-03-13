@@ -1,43 +1,46 @@
-const db = require('./db');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
+const Product = require('./Product');
+const User = require('./User');
 
-const createProduct = async (userId, productName, photoId, categoryId, amount, details, price, status) => {
-    const sql = `INSERT INTO Product 
-        (User_ID, Product_name, Photo_ID, Catagory_ID, Product_amount, Details, Price, Product_status) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-    const [result] = await db.execute(sql, [userId, productName, photoId, categoryId, amount, details, price, status]);
-    return result;
-};
+const Order = sequelize.define('Order', {
+    Order_ID: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    GroupOrder_ID: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    Order_name: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    Order_amount: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    Total_Price: {
+        type: DataTypes.FLOAT,
+        allowNull: false
+    },
+    Order_status: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'Pending'
+    },
+    Order_detail: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    }
+}, {
+    tableName: 'orders',
+    timestamps: true
+});
 
-const getAllProducts = async () => {
-    const sql = 'SELECT * FROM Product';
-    const [rows] = await db.execute(sql);
-    return rows;
-};
+// กำหนดความสัมพันธ์
+Order.belongsTo(Product, { foreignKey: 'Product_ID' });
+Order.belongsTo(User, { foreignKey: 'User_ID' });
 
-const getProductById = async (productId) => {
-    const sql = 'SELECT * FROM Product WHERE Product_ID = ?';
-    const [rows] = await db.execute(sql, [productId]);
-    return rows[0];
-};
-
-const updateProduct = async (productId, productName, categoryId, amount, details, price, status) => {
-    const sql = `UPDATE Product 
-        SET Product_name = ?, Catagory_ID = ?, Product_amount = ?, Details = ?, Price = ?, Product_status = ? 
-        WHERE Product_ID = ?`;
-    const [result] = await db.execute(sql, [productName, categoryId, amount, details, price, status, productId]);
-    return result;
-};
-
-const deleteProduct = async (productId) => {
-    const sql = 'DELETE FROM Product WHERE Product_ID = ?';
-    const [result] = await db.execute(sql, [productId]);
-    return result;
-};
-
-module.exports = {
-    createProduct,
-    getAllProducts,
-    getProductById,
-    updateProduct,
-    deleteProduct
-};
+module.exports = Order;

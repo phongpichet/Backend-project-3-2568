@@ -1,41 +1,61 @@
-const db = require('./db');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database'); // เชื่อมต่อกับ database
+const User = require('./User'); // Import User model
+const Photo = require('./Photo'); // Import Photo model
+const Category = require('./Category'); // Import Category model
 
-const createOrder = async (groupOrderId, orderName, orderAmount, productId, userId, totalPrice, orderStatus, orderDetail) => {
-    const sql = `INSERT INTO \`Order\` 
-        (GroupOrder_ID, Order_name, Order_amount, Product_ID, User_ID, Total_Price, Order_status, Order_detail) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-    const [result] = await db.execute(sql, [groupOrderId, orderName, orderAmount, productId, userId, totalPrice, orderStatus, orderDetail]);
-    return result;
-};
+const Product = sequelize.define('Product', {
+    Product_ID: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    User_ID: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: User,
+            key: 'User_ID'
+        }
+    },
+    Product_name: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    Photo_ID: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: Photo,
+            key: 'Photo_ID'
+        }
+    },
+    Catagory_ID: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: Category,
+            key: 'Catagory_ID'
+        }
+    },
+    Product_amount: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    Details: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    Price: {
+        type: DataTypes.FLOAT,
+        allowNull: false
+    },
+    Product_status: {
+        type: DataTypes.STRING,
+        allowNull: false
+    }
+}, {
+    tableName: 'Product',
+    timestamps: false
+});
 
-const getAllOrders = async () => {
-    const sql = 'SELECT * FROM `Order`';
-    const [rows] = await db.execute(sql);
-    return rows;
-};
-
-const getOrderById = async (orderId) => {
-    const sql = 'SELECT * FROM `Order` WHERE Order_ID = ?';
-    const [rows] = await db.execute(sql, [orderId]);
-    return rows[0];
-};
-
-const updateOrderStatus = async (orderId, orderStatus) => {
-    const sql = 'UPDATE `Order` SET Order_status = ? WHERE Order_ID = ?';
-    const [result] = await db.execute(sql, [orderStatus, orderId]);
-    return result;
-};
-
-const deleteOrder = async (orderId) => {
-    const sql = 'DELETE FROM `Order` WHERE Order_ID = ?';
-    const [result] = await db.execute(sql, [orderId]);
-    return result;
-};
-
-module.exports = {
-    createOrder,
-    getAllOrders,
-    getOrderById,
-    updateOrderStatus,
-    deleteOrder
-};
+module.exports = Product;
