@@ -10,5 +10,6 @@ const syncDatabase = async () => {
 };
 
 syncDatabase();
+console.log("Server is running...");
 
 module.exports = { sequelize }; // ✅ ต้อง export ออกไปให้ server.js ใช้
