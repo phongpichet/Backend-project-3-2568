@@ -3,12 +3,15 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const db = require('./config/db');
+const { sequelize } = require('./models'); // Import sequelize จาก models/index.js
+
 
 const myMiddleware = require('./middleware/myMiddleware');
 const authRoutes = require('./routes/authRoutes');
 const productRoutes = require('./routes/productRoutes');
 const orderRoutes = require ('./routes/orderRoutes');
 const { verifyToken, verifyAdmin } = require('./middleware/authMiddleware');
+
 const adminRoutes = require('./routes/adminRoutes');
 
 const app = express();
@@ -32,3 +35,4 @@ app.get('/', (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
